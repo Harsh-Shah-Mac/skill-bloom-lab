@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -7,7 +6,7 @@ import { Progress } from "@/components/ui/progress";
 import { ChatInterface } from "@/components/ChatInterface";
 import { ProjectDashboard } from "@/components/ProjectDashboard";
 import { ResourceLibrary } from "@/components/ResourceLibrary";
-import { Brain, Rocket, Star, Zap, Target, BookOpen, Users, Trophy, Sparkles, Atom, Flame, Lightning } from "lucide-react";
+import { Brain, Rocket, Star, Zap, Target, BookOpen, Users, Trophy, Sparkles, Atom, Flame } from "lucide-react";
 
 const Index = () => {
   const [currentView, setCurrentView] = useState<'landing' | 'chat' | 'dashboard' | 'resources'>('landing');
@@ -47,7 +46,7 @@ const Index = () => {
   const floatingShapes = [
     { icon: <Atom className="w-12 h-12 text-electric-400" />, delay: "0s", duration: "8s" },
     { icon: <Flame className="w-16 h-16 text-hot-400" />, delay: "2s", duration: "10s" },
-    { icon: <Lightning className="w-10 h-10 text-neon-400" />, delay: "4s", duration: "6s" },
+    { icon: <Zap className="w-10 h-10 text-neon-400" />, delay: "4s", duration: "6s" },
     { icon: <Sparkles className="w-14 h-14 text-purple-400" />, delay: "1s", duration: "12s" },
   ];
 
