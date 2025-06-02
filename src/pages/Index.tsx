@@ -7,156 +7,133 @@ import { Progress } from "@/components/ui/progress";
 import { ChatInterface } from "@/components/ChatInterface";
 import { ProjectDashboard } from "@/components/ProjectDashboard";
 import { ResourceLibrary } from "@/components/ResourceLibrary";
-import { Brain, Rocket, Star, Zap, Target, BookOpen, Users, Trophy, Sparkles, Lightbulb } from "lucide-react";
+import { Brain, Rocket, Star, Target, Trophy, BookOpen } from "lucide-react";
 
 const Index = () => {
   const [currentView, setCurrentView] = useState<'landing' | 'chat' | 'dashboard' | 'resources'>('landing');
-  const [userProgress, setUserProgress] = useState(25);
 
   const features = [
     {
       icon: <Brain className="w-8 h-8" />,
-      title: "AI-POWERED GENIUS",
-      description: "ChatGPT analyzes your ideas and creates personalized learning paths",
-      color: "from-yellow-400 to-orange-500",
-      bgColor: "bg-yellow-500/20"
-    },
-    {
-      icon: <Rocket className="w-8 h-8" />,
-      title: "SMART SEARCH",
-      description: "Find the most relevant resources tailored to your learning style",
-      color: "from-neon-400 to-green-500",
-      bgColor: "bg-neon-500/20"
+      title: "AI-Powered Learning",
+      description: "Personalized learning paths created by AI",
+      bgColor: "bg-gray-50"
     },
     {
       icon: <Target className="w-8 h-8" />,
-      title: "PROGRESSIVE LEARNING",
-      description: "Break complex topics into manageable learning quests",
-      color: "from-hot-400 to-red-500",
-      bgColor: "bg-hot-500/20"
+      title: "Progressive Quests",
+      description: "Break down complex topics into manageable steps",
+      bgColor: "bg-yellow-50"
     },
     {
       icon: <Trophy className="w-8 h-8" />,
-      title: "ACHIEVEMENT SYSTEM",
-      description: "Unlock badges and track your learning progress",
-      color: "from-yellow-400 to-orange-500",
-      bgColor: "bg-yellow-500/20"
+      title: "Track Progress",
+      description: "Monitor your learning journey with achievements",
+      bgColor: "bg-gray-50"
+    },
+    {
+      icon: <BookOpen className="w-8 h-8" />,
+      title: "Curated Resources",
+      description: "Access high-quality learning materials",
+      bgColor: "bg-yellow-50"
     }
   ];
 
   const renderLanding = () => (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black relative overflow-hidden">
-      {/* Simplified background */}
-      <div className="absolute inset-0 overflow-hidden">
-        {/* Fewer floating elements */}
-        <div className="absolute top-20 left-20 opacity-20">
-          <Lightbulb className="w-8 h-8 text-yellow-400 animate-float" />
-        </div>
-        <div className="absolute top-32 right-32 opacity-20">
-          <Sparkles className="w-6 h-6 text-yellow-400 animate-float" style={{ animationDelay: '2s' }} />
-        </div>
-        
-        {/* Subtle background blobs */}
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-yellow-500/10 to-orange-500/10 rounded-full blur-3xl"></div>
-        <div className="absolute -bottom-40 -left-40 w-72 h-72 bg-gradient-to-br from-yellow-500/10 to-orange-500/10 rounded-full blur-3xl"></div>
-      </div>
-
-      <div className="relative z-10 container mx-auto px-6 py-12">
-        {/* Simplified header */}
+    <div className="min-h-screen bg-white">
+      <div className="container mx-auto px-6 py-12">
+        {/* Header */}
         <div className="text-center mb-16">
-          <div className="flex justify-center items-center mb-6">
-            <Star className="w-12 h-12 text-yellow-400" />
+          <div className="flex justify-center items-center mb-8">
+            <div className="w-16 h-16 bg-yellow-400 rounded-full flex items-center justify-center">
+              <Star className="w-8 h-8 text-black" />
+            </div>
           </div>
           
-          <h1 className="font-apple-ny text-6xl md:text-8xl font-black mb-6">
-            <span className="bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent">
-              LEARN
-            </span>
-            <span className="text-white">QUEST</span>
+          <h1 className="text-6xl md:text-7xl font-bold mb-6 text-black">
+            <span className="text-yellow-500">LEARN</span>QUEST
           </h1>
           
-          <div className="mb-8">
-            <p className="font-space text-xl md:text-2xl text-white font-medium mb-4">
-              Transform your ideas into
-            </p>
-            <p className="font-apple-ny text-2xl md:text-3xl font-bold bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent">
-              Epic Learning Adventures! 🚀
-            </p>
-          </div>
+          <p className="text-xl md:text-2xl text-gray-600 mb-4 font-medium">
+            Transform your ideas into
+          </p>
+          <p className="text-2xl md:text-3xl font-bold text-yellow-500 mb-8">
+            Epic Learning Adventures! 🚀
+          </p>
           
-          <div className="flex flex-wrap justify-center gap-4 mb-12">
-            <Badge className="bg-gradient-to-r from-yellow-500 to-orange-500 text-black px-6 py-2 text-lg font-bold">
+          <div className="flex flex-wrap justify-center gap-3 mb-12">
+            <Badge className="bg-yellow-500 text-black px-4 py-2 text-sm font-bold rounded-full">
               AI-POWERED
             </Badge>
-            <Badge className="bg-gradient-to-r from-neon-500 to-green-500 text-black px-6 py-2 text-lg font-bold">
+            <Badge className="bg-gray-800 text-white px-4 py-2 text-sm font-bold rounded-full">
               GAMIFIED
             </Badge>
-            <Badge className="bg-gradient-to-r from-yellow-500 to-orange-500 text-black px-6 py-2 text-lg font-bold">
+            <Badge className="bg-yellow-500 text-black px-4 py-2 text-sm font-bold rounded-full">
               PERSONALIZED
             </Badge>
           </div>
         </div>
 
-        {/* Simplified features grid */}
+        {/* Features Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
           {features.map((feature, index) => (
             <Card 
               key={index} 
-              className={`${feature.bgColor} backdrop-blur-lg border-2 border-white/20 hover:border-yellow-400/50 transition-all duration-300 hover:scale-105 group cursor-pointer`}
+              className={`${feature.bgColor} border-2 border-gray-200 hover:border-yellow-400 transition-all duration-200 hover:shadow-lg cursor-pointer`}
             >
               <CardContent className="p-6 text-center">
-                <div className={`w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r ${feature.color} flex items-center justify-center text-white group-hover:scale-110 transition-all duration-300`}>
+                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-white border-2 border-gray-200 flex items-center justify-center text-gray-700">
                   {feature.icon}
                 </div>
-                <h3 className="font-apple-ny text-xl font-bold text-white mb-3">{feature.title}</h3>
-                <p className="text-white/80 text-sm font-space">{feature.description}</p>
+                <h3 className="text-lg font-bold text-gray-900 mb-3">{feature.title}</h3>
+                <p className="text-gray-600 text-sm">{feature.description}</p>
               </CardContent>
             </Card>
           ))}
         </div>
 
-        {/* Simplified action buttons */}
+        {/* Action Buttons */}
         <div className="text-center mb-16">
-          <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Button 
               onClick={() => setCurrentView('chat')}
-              className="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-black px-12 py-6 text-xl font-bold rounded-2xl shadow-lg hover:shadow-yellow-500/25 transition-all duration-300 hover:scale-105 font-apple-ny"
+              className="bg-yellow-500 hover:bg-yellow-600 text-black px-8 py-4 text-lg font-bold rounded-2xl shadow-md hover:shadow-lg transition-all duration-200"
             >
-              🚀 START LEARNING
+              🚀 Start Learning
             </Button>
             <Button 
               onClick={() => setCurrentView('dashboard')}
-              className="bg-gradient-to-r from-neon-500 to-green-500 hover:from-neon-600 hover:to-green-600 text-black px-12 py-6 text-xl font-bold rounded-2xl shadow-lg hover:shadow-neon-500/25 transition-all duration-300 hover:scale-105 font-apple-ny"
+              className="bg-gray-800 hover:bg-gray-900 text-white px-8 py-4 text-lg font-bold rounded-2xl shadow-md hover:shadow-lg transition-all duration-200"
             >
-              📊 DASHBOARD
+              📊 Dashboard
             </Button>
             <Button 
               onClick={() => setCurrentView('resources')}
-              className="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-black px-12 py-6 text-xl font-bold rounded-2xl shadow-lg hover:shadow-yellow-500/25 transition-all duration-300 hover:scale-105 font-apple-ny"
+              className="bg-yellow-500 hover:bg-yellow-600 text-black px-8 py-4 text-lg font-bold rounded-2xl shadow-md hover:shadow-lg transition-all duration-200"
             >
-              📚 RESOURCES
+              📚 Resources
             </Button>
           </div>
         </div>
 
-        {/* Simplified stats section */}
+        {/* Stats Section */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Card className="bg-yellow-600/20 backdrop-blur-lg border-2 border-yellow-400/30">
+          <Card className="bg-yellow-50 border-2 border-yellow-200">
             <CardContent className="p-6 text-center">
-              <div className="font-apple-ny text-4xl font-bold text-yellow-400 mb-2">10K+</div>
-              <div className="text-white font-space font-medium">Learning Paths</div>
+              <div className="text-4xl font-bold text-yellow-600 mb-2">10K+</div>
+              <div className="text-gray-700 font-medium">Learning Paths</div>
             </CardContent>
           </Card>
-          <Card className="bg-neon-600/20 backdrop-blur-lg border-2 border-neon-400/30">
+          <Card className="bg-gray-50 border-2 border-gray-200">
             <CardContent className="p-6 text-center">
-              <div className="font-apple-ny text-4xl font-bold text-neon-400 mb-2">50K+</div>
-              <div className="text-white font-space font-medium">Curated Resources</div>
+              <div className="text-4xl font-bold text-gray-800 mb-2">50K+</div>
+              <div className="text-gray-700 font-medium">Curated Resources</div>
             </CardContent>
           </Card>
-          <Card className="bg-yellow-600/20 backdrop-blur-lg border-2 border-yellow-400/30">
+          <Card className="bg-yellow-50 border-2 border-yellow-200">
             <CardContent className="p-6 text-center">
-              <div className="font-apple-ny text-4xl font-bold text-yellow-400 mb-2">95%</div>
-              <div className="text-white font-space font-medium">Success Rate</div>
+              <div className="text-4xl font-bold text-yellow-600 mb-2">95%</div>
+              <div className="text-gray-700 font-medium">Success Rate</div>
             </CardContent>
           </Card>
         </div>
@@ -165,7 +142,7 @@ const Index = () => {
   );
 
   return (
-    <div className="min-h-screen dark">
+    <div className="min-h-screen">
       {currentView === 'landing' && renderLanding()}
       {currentView === 'chat' && <ChatInterface onBack={() => setCurrentView('landing')} />}
       {currentView === 'dashboard' && <ProjectDashboard onBack={() => setCurrentView('landing')} />}
