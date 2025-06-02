@@ -1,388 +1,277 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { 
-  Trophy, Target, Clock, BookOpen, Star, Zap, 
-  PlayCircle, CheckCircle, Calendar, Users, 
-  Bookmark, Share, Download, Settings
-} from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { ArrowLeft, Target, Trophy, Star, Zap, CheckCircle, Lock, Play } from "lucide-react";
 
 interface ProjectDashboardProps {
   onBack: () => void;
 }
 
+interface QuestNode {
+  id: string;
+  title: string;
+  description: string;
+  status: 'completed' | 'current' | 'locked';
+  level: number;
+  position: { x: number; y: number };
+  points: number;
+}
+
 export const ProjectDashboard = ({ onBack }: ProjectDashboardProps) => {
-  const [activeProject, setActiveProject] = useState("mobile-app");
+  const [selectedQuest, setSelectedQuest] = useState<QuestNode | null>(null);
 
-  const projects = [
+  const questNodes: QuestNode[] = [
     {
-      id: "mobile-app",
-      title: "React Native Food App",
-      description: "Build a full-stack food delivery mobile application",
-      progress: 45,
-      status: "In Progress",
-      difficulty: "Intermediate",
-      estimatedTime: "8 weeks",
-      technologies: ["React Native", "Node.js", "MongoDB", "Firebase"],
-      milestones: 8,
-      completedMilestones: 3,
-      nextDeadline: "Nov 15, 2024",
-      color: "from-orange-500 to-red-500"
+      id: "1",
+      title: "BASICS MASTERY",
+      description: "Master the fundamentals and build your foundation",
+      status: 'completed',
+      level: 1,
+      position: { x: 50, y: 85 },
+      points: 500,
     },
     {
-      id: "web-portfolio",
-      title: "Personal Portfolio Website",
-      description: "Create a stunning portfolio with modern animations",
-      progress: 80,
-      status: "Almost Complete",
-      difficulty: "Beginner",
-      estimatedTime: "3 weeks",
-      technologies: ["React", "Tailwind CSS", "Framer Motion"],
-      milestones: 5,
-      completedMilestones: 4,
-      nextDeadline: "Nov 8, 2024",
-      color: "from-purple-500 to-pink-500"
+      id: "2", 
+      title: "INTERMEDIATE CHAOS",
+      description: "Dive deeper into advanced concepts",
+      status: 'completed',
+      level: 2,
+      position: { x: 25, y: 70 },
+      points: 750,
     },
     {
-      id: "ai-chatbot",
-      title: "AI Customer Support Bot",
-      description: "Develop an intelligent chatbot using OpenAI API",
-      progress: 20,
-      status: "Getting Started",
-      difficulty: "Advanced",
-      estimatedTime: "12 weeks",
-      technologies: ["Python", "OpenAI API", "FastAPI", "PostgreSQL"],
-      milestones: 10,
-      completedMilestones: 2,
-      nextDeadline: "Dec 1, 2024",
-      color: "from-blue-500 to-cyan-500"
+      id: "3",
+      title: "CHALLENGE ARENA",
+      description: "Test your skills with real-world projects",
+      status: 'current',
+      level: 3,
+      position: { x: 75, y: 55 },
+      points: 1000,
+    },
+    {
+      id: "4",
+      title: "EXPERT REALM",
+      description: "Become a master of your domain",
+      status: 'locked',
+      level: 4,
+      position: { x: 40, y: 40 },
+      points: 1500,
+    },
+    {
+      id: "5",
+      title: "LEGEND STATUS",
+      description: "Achieve legendary mastery",
+      status: 'locked',
+      level: 5,
+      position: { x: 60, y: 25 },
+      points: 2000,
+    },
+    {
+      id: "6",
+      title: "GODMODE ACTIVATED",
+      description: "Transcend to ultimate knowledge",
+      status: 'locked',
+      level: 6,
+      position: { x: 50, y: 10 },
+      points: 3000,
+    },
+  ];
+
+  const getNodeIcon = (status: string) => {
+    switch (status) {
+      case 'completed':
+        return <CheckCircle className="w-8 h-8 text-neon-400" />;
+      case 'current':
+        return <Play className="w-8 h-8 text-yellow-400 animate-pulse" />;
+      case 'locked':
+        return <Lock className="w-8 h-8 text-gray-500" />;
+      default:
+        return <Target className="w-8 h-8" />;
     }
-  ];
+  };
 
-  const achievements = [
-    { id: 1, title: "First Steps", description: "Completed your first mini-project", icon: "🎯", unlocked: true },
-    { id: 2, title: "Code Warrior", description: "Wrote 1000+ lines of code", icon: "⚔️", unlocked: true },
-    { id: 3, title: "Problem Solver", description: "Solved 10 coding challenges", icon: "🧩", unlocked: true },
-    { id: 4, title: "Speed Demon", description: "Completed a project ahead of schedule", icon: "⚡", unlocked: false },
-    { id: 5, title: "Team Player", description: "Collaborated on a group project", icon: "👥", unlocked: false },
-    { id: 6, title: "Master Builder", description: "Completed 5 full projects", icon: "🏗️", unlocked: false }
-  ];
-
-  const weeklyStats = [
-    { day: "Mon", hours: 2.5, completed: 3 },
-    { day: "Tue", hours: 1.5, completed: 2 },
-    { day: "Wed", hours: 3.0, completed: 4 },
-    { day: "Thu", hours: 2.0, completed: 3 },
-    { day: "Fri", hours: 4.0, completed: 6 },
-    { day: "Sat", hours: 3.5, completed: 5 },
-    { day: "Sun", hours: 2.5, completed: 3 }
-  ];
-
-  const currentProject = projects.find(p => p.id === activeProject);
+  const getNodeColors = (status: string) => {
+    switch (status) {
+      case 'completed':
+        return "bg-gradient-to-r from-neon-500 to-green-600 border-neon-400 shadow-neon-500/50";
+      case 'current':
+        return "bg-gradient-to-r from-yellow-500 to-orange-500 border-yellow-400 shadow-yellow-500/50 animate-pulse-glow";
+      case 'locked':
+        return "bg-gradient-to-r from-gray-600 to-gray-700 border-gray-500";
+      default:
+        return "bg-gradient-to-r from-electric-500 to-purple-600 border-electric-400";
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900">
-      {/* Header */}
-      <div className="bg-black/20 backdrop-blur-lg border-b border-white/10 p-4">
-        <div className="container mx-auto flex items-center justify-between">
-          <Button 
-            onClick={onBack}
-            variant="ghost" 
-            className="text-white hover:bg-white/10"
-          >
-            ← Back to Home
-          </Button>
-          <h1 className="text-3xl font-bold text-white">Project Dashboard</h1>
-          <div className="flex gap-2">
-            <Button className="bg-gradient-to-r from-green-500 to-emerald-600 text-white">
-              <Share className="w-4 h-4 mr-2" />
-              Share
-            </Button>
-            <Button className="bg-gradient-to-r from-blue-500 to-cyan-600 text-white">
-              <Download className="w-4 h-4 mr-2" />
-              Export
-            </Button>
-          </div>
-        </div>
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black relative overflow-hidden">
+      {/* Animated background */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute -top-40 -right-40 w-96 h-96 bg-gradient-to-br from-yellow-500/20 to-orange-500/20 morphing-blob animate-pulse-glow"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-br from-neon-500/20 to-green-500/20 morphing-blob animate-pulse-glow" style={{ animationDelay: '4s' }}></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-gradient-to-br from-electric-500/10 to-purple-500/10 morphing-blob animate-pulse-glow" style={{ animationDelay: '2s' }}></div>
       </div>
 
-      <div className="container mx-auto p-6">
-        <Tabs defaultValue="overview" className="space-y-6">
-          <TabsList className="bg-black/20 backdrop-blur-lg border border-white/20 p-1">
-            <TabsTrigger value="overview" className="data-[state=active]:bg-white/20 text-white">
-              📊 Overview
-            </TabsTrigger>
-            <TabsTrigger value="projects" className="data-[state=active]:bg-white/20 text-white">
-              🚀 Projects
-            </TabsTrigger>
-            <TabsTrigger value="achievements" className="data-[state=active]:bg-white/20 text-white">
-              🏆 Achievements
-            </TabsTrigger>
-            <TabsTrigger value="analytics" className="data-[state=active]:bg-white/20 text-white">
-              📈 Analytics
-            </TabsTrigger>
-          </TabsList>
+      <div className="relative z-10 container mx-auto px-6 py-8">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center">
+            <Button
+              onClick={onBack}
+              className="bg-gradient-to-r from-electric-500 to-purple-600 hover:from-electric-600 hover:to-purple-700 text-white mr-4"
+            >
+              <ArrowLeft className="w-4 h-4" />
+            </Button>
+            <Trophy className="w-8 h-8 text-yellow-400 mr-3 animate-wiggle" />
+            <h1 className="font-apple-ny text-4xl font-black text-white text-glow">
+              QUEST DASHBOARD
+            </h1>
+          </div>
+          
+          <div className="flex items-center gap-6">
+            <Badge className="bg-gradient-to-r from-yellow-500 to-orange-500 text-black px-6 py-2 text-xl font-bold">
+              <Star className="w-5 h-5 mr-2" />
+              2,750 XP
+            </Badge>
+            <Badge className="bg-gradient-to-r from-neon-500 to-green-600 text-black px-6 py-2 text-xl font-bold">
+              Level 3 WARRIOR
+            </Badge>
+          </div>
+        </div>
 
-          <TabsContent value="overview" className="space-y-6">
-            {/* Stats Overview */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-              <Card className="bg-gradient-to-r from-purple-600/20 to-pink-600/20 backdrop-blur-lg border-2 border-purple-400/30">
-                <CardContent className="p-6 text-center">
-                  <Trophy className="w-12 h-12 text-yellow-400 mx-auto mb-4" />
-                  <div className="text-3xl font-black text-white mb-2">7</div>
-                  <div className="text-white/80 font-semibold">Achievements Unlocked</div>
-                </CardContent>
-              </Card>
-              <Card className="bg-gradient-to-r from-blue-600/20 to-cyan-600/20 backdrop-blur-lg border-2 border-blue-400/30">
-                <CardContent className="p-6 text-center">
-                  <Target className="w-12 h-12 text-blue-400 mx-auto mb-4" />
-                  <div className="text-3xl font-black text-white mb-2">3</div>
-                  <div className="text-white/80 font-semibold">Active Projects</div>
-                </CardContent>
-              </Card>
-              <Card className="bg-gradient-to-r from-green-600/20 to-emerald-600/20 backdrop-blur-lg border-2 border-green-400/30">
-                <CardContent className="p-6 text-center">
-                  <Clock className="w-12 h-12 text-green-400 mx-auto mb-4" />
-                  <div className="text-3xl font-black text-white mb-2">42h</div>
-                  <div className="text-white/80 font-semibold">This Month</div>
-                </CardContent>
-              </Card>
-              <Card className="bg-gradient-to-r from-orange-600/20 to-red-600/20 backdrop-blur-lg border-2 border-orange-400/30">
-                <CardContent className="p-6 text-center">
-                  <Star className="w-12 h-12 text-orange-400 mx-auto mb-4" />
-                  <div className="text-3xl font-black text-white mb-2">85%</div>
-                  <div className="text-white/80 font-semibold">Success Rate</div>
-                </CardContent>
-              </Card>
+        {/* Progress Overview */}
+        <Card className="mb-8 bg-black/50 backdrop-blur-lg border-4 border-yellow-400/30 morphing-blob">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="font-apple-ny text-2xl font-black text-yellow-400 text-glow">LEARNING PROGRESS</h3>
+              <span className="text-white font-space text-lg">33% Complete</span>
             </div>
+            <Progress value={33} className="h-4 bg-gray-800" />
+            <div className="flex justify-between mt-4 text-sm text-white/80 font-space">
+              <span>2 Quests Completed</span>
+              <span>1 Active Quest</span>
+              <span>3 Locked Quests</span>
+            </div>
+          </CardContent>
+        </Card>
 
-            {/* Current Project Spotlight */}
-            {currentProject && (
-              <Card className="bg-gradient-to-r from-indigo-600/20 to-purple-600/20 backdrop-blur-lg border-2 border-indigo-400/30">
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-2xl font-bold text-white">
-                      🎯 Current Focus: {currentProject.title}
-                    </CardTitle>
-                    <Badge className={`bg-gradient-to-r ${currentProject.color} text-white px-4 py-2 font-bold`}>
-                      {currentProject.status}
-                    </Badge>
+        {/* Quest Map */}
+        <div className="relative">
+          <Card className="min-h-[600px] bg-black/50 backdrop-blur-lg border-4 border-electric-400/30 morphing-blob">
+            <CardContent className="p-8 relative">
+              <h3 className="font-apple-ny text-3xl font-black text-electric-400 text-glow mb-8 text-center">
+                YOUR LEARNING UNIVERSE
+              </h3>
+              
+              {/* Quest Path SVG */}
+              <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ zIndex: 1 }}>
+                <defs>
+                  <linearGradient id="pathGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#fbbf24" stopOpacity="0.8" />
+                    <stop offset="50%" stopColor="#10b981" stopOpacity="0.8" />
+                    <stop offset="100%" stopColor="#8b5cf6" stopOpacity="0.8" />
+                  </linearGradient>
+                </defs>
+                
+                {/* Connect quest nodes with animated path */}
+                {questNodes.slice(0, -1).map((node, index) => {
+                  const nextNode = questNodes[index + 1];
+                  return (
+                    <line
+                      key={`path-${node.id}`}
+                      x1={`${node.position.x}%`}
+                      y1={`${node.position.y}%`}
+                      x2={`${nextNode.position.x}%`}
+                      y2={`${nextNode.position.y}%`}
+                      stroke="url(#pathGradient)"
+                      strokeWidth="4"
+                      strokeDasharray="10,5"
+                      className="animate-pulse"
+                    />
+                  );
+                })}
+              </svg>
+
+              {/* Quest Nodes */}
+              {questNodes.map((node) => (
+                <div
+                  key={node.id}
+                  className="absolute transform -translate-x-1/2 -translate-y-1/2 cursor-pointer"
+                  style={{
+                    left: `${node.position.x}%`,
+                    top: `${node.position.y}%`,
+                    zIndex: 10,
+                  }}
+                  onClick={() => setSelectedQuest(node)}
+                >
+                  <div
+                    className={`w-20 h-20 rounded-full border-4 shadow-2xl transition-all duration-300 hover:scale-125 flex items-center justify-center ${getNodeColors(node.status)}`}
+                  >
+                    {getNodeIcon(node.status)}
                   </div>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <p className="text-white/90 text-lg">{currentProject.description}</p>
                   
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div>
-                      <div className="text-white/80 text-sm mb-2">Overall Progress</div>
-                      <Progress value={currentProject.progress} className="h-3 mb-2" />
-                      <div className="text-white font-bold">{currentProject.progress}% Complete</div>
-                    </div>
-                    <div>
-                      <div className="text-white/80 text-sm mb-2">Milestones</div>
-                      <div className="text-2xl font-bold text-white">
-                        {currentProject.completedMilestones}/{currentProject.milestones}
-                      </div>
-                      <div className="text-green-400 text-sm">Completed</div>
-                    </div>
-                    <div>
-                      <div className="text-white/80 text-sm mb-2">Next Deadline</div>
-                      <div className="text-xl font-bold text-white">{currentProject.nextDeadline}</div>
-                      <div className="text-orange-400 text-sm">5 days remaining</div>
+                  <div className="absolute top-full mt-2 left-1/2 transform -translate-x-1/2 text-center">
+                    <div className="bg-black/80 backdrop-blur px-3 py-1 rounded-lg border border-white/30">
+                      <div className="text-white font-space font-bold text-sm">{node.title}</div>
+                      <div className="text-yellow-400 text-xs">Level {node.level}</div>
                     </div>
                   </div>
-
-                  <div className="flex flex-wrap gap-2">
-                    {currentProject.technologies.map((tech) => (
-                      <Badge key={tech} className="bg-white/10 text-white border border-white/20">
-                        {tech}
-                      </Badge>
-                    ))}
-                  </div>
-
-                  <div className="flex gap-4">
-                    <Button className="bg-gradient-to-r from-green-500 to-emerald-600 text-white">
-                      <PlayCircle className="w-4 h-4 mr-2" />
-                      Continue Learning
-                    </Button>
-                    <Button variant="outline" className="border-white/20 text-white hover:bg-white/10">
-                      <Calendar className="w-4 h-4 mr-2" />
-                      View Schedule
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-          </TabsContent>
-
-          <TabsContent value="projects" className="space-y-6">
-            <div className="grid gap-6">
-              {projects.map((project) => (
-                <Card 
-                  key={project.id} 
-                  className={`bg-gradient-to-r ${project.color}/20 backdrop-blur-lg border-2 ${
-                    project.id === activeProject ? 'border-white/50' : 'border-white/20'
-                  } cursor-pointer hover:border-white/40 transition-all duration-300 hover:scale-105`}
-                  onClick={() => setActiveProject(project.id)}
-                >
-                  <CardContent className="p-6">
-                    <div className="flex items-start justify-between mb-4">
-                      <div>
-                        <h3 className="text-2xl font-bold text-white mb-2">{project.title}</h3>
-                        <p className="text-white/80">{project.description}</p>
-                      </div>
-                      <Badge className={`bg-gradient-to-r ${project.color} text-white font-bold`}>
-                        {project.difficulty}
-                      </Badge>
-                    </div>
-
-                    <div className="space-y-4">
-                      <div>
-                        <div className="flex justify-between text-white/80 text-sm mb-2">
-                          <span>Progress</span>
-                          <span>{project.progress}%</span>
-                        </div>
-                        <Progress value={project.progress} className="h-2" />
-                      </div>
-
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-                        <div>
-                          <div className="text-white font-bold">{project.estimatedTime}</div>
-                          <div className="text-white/60 text-xs">Est. Time</div>
-                        </div>
-                        <div>
-                          <div className="text-white font-bold">{project.completedMilestones}/{project.milestones}</div>
-                          <div className="text-white/60 text-xs">Milestones</div>
-                        </div>
-                        <div>
-                          <div className="text-white font-bold">{project.technologies.length}</div>
-                          <div className="text-white/60 text-xs">Technologies</div>
-                        </div>
-                        <div>
-                          <div className="text-white font-bold">{project.nextDeadline}</div>
-                          <div className="text-white/60 text-xs">Next Deadline</div>
-                        </div>
-                      </div>
-
-                      <div className="flex justify-between items-center">
-                        <div className="flex flex-wrap gap-1">
-                          {project.technologies.slice(0, 3).map((tech) => (
-                            <Badge key={tech} className="bg-white/10 text-white text-xs">
-                              {tech}
-                            </Badge>
-                          ))}
-                          {project.technologies.length > 3 && (
-                            <Badge className="bg-white/10 text-white text-xs">
-                              +{project.technologies.length - 3}
-                            </Badge>
-                          )}
-                        </div>
-                        <div className="flex gap-2">
-                          <Button size="sm" className="bg-gradient-to-r from-blue-500 to-cyan-600">
-                            <BookOpen className="w-4 h-4" />
-                          </Button>
-                          <Button size="sm" className="bg-gradient-to-r from-purple-500 to-pink-600">
-                            <Bookmark className="w-4 h-4" />
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </TabsContent>
-
-          <TabsContent value="achievements" className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {achievements.map((achievement) => (
-                <Card 
-                  key={achievement.id}
-                  className={`${
-                    achievement.unlocked 
-                      ? 'bg-gradient-to-r from-yellow-500/20 to-orange-500/20 border-yellow-400/50' 
-                      : 'bg-white/5 border-white/10'
-                  } backdrop-blur-lg border-2 transition-all duration-300 hover:scale-105`}
-                >
-                  <CardContent className="p-6 text-center">
-                    <div className={`text-6xl mb-4 ${achievement.unlocked ? 'grayscale-0' : 'grayscale'}`}>
-                      {achievement.icon}
-                    </div>
-                    <h3 className={`text-xl font-bold mb-2 ${
-                      achievement.unlocked ? 'text-yellow-400' : 'text-white/50'
-                    }`}>
-                      {achievement.title}
-                    </h3>
-                    <p className={`text-sm ${
-                      achievement.unlocked ? 'text-white/90' : 'text-white/40'
-                    }`}>
-                      {achievement.description}
-                    </p>
-                    {achievement.unlocked && (
-                      <Badge className="mt-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold">
-                        <CheckCircle className="w-4 h-4 mr-1" />
-                        Unlocked!
-                      </Badge>
-                    )}
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </TabsContent>
-
-          <TabsContent value="analytics" className="space-y-6">
-            {/* Weekly Activity Chart */}
-            <Card className="bg-gradient-to-r from-indigo-600/20 to-purple-600/20 backdrop-blur-lg border-2 border-indigo-400/30">
-              <CardHeader>
-                <CardTitle className="text-white">📊 Weekly Activity</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-7 gap-4">
-                  {weeklyStats.map((day) => (
-                    <div key={day.day} className="text-center">
-                      <div className="text-white/60 text-xs mb-2">{day.day}</div>
-                      <div 
-                        className="bg-gradient-to-t from-blue-500 to-cyan-400 rounded-t-lg mx-auto mb-2"
-                        style={{ 
-                          width: '20px', 
-                          height: `${(day.hours / 4) * 60}px`,
-                          minHeight: '10px'
-                        }}
-                      ></div>
-                      <div className="text-white text-xs font-bold">{day.hours}h</div>
-                      <div className="text-green-400 text-xs">{day.completed} tasks</div>
-                    </div>
-                  ))}
                 </div>
-              </CardContent>
-            </Card>
+              ))}
+            </CardContent>
+          </Card>
+        </div>
 
-            {/* Learning Streak */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <Card className="bg-gradient-to-r from-orange-600/20 to-red-600/20 backdrop-blur-lg border-2 border-orange-400/30">
-                <CardContent className="p-6 text-center">
-                  <Zap className="w-16 h-16 text-orange-400 mx-auto mb-4" />
-                  <div className="text-4xl font-black text-white mb-2">🔥 12</div>
-                  <div className="text-white/80 font-semibold">Day Learning Streak</div>
-                  <div className="text-orange-400 text-sm mt-2">Keep it up! 🚀</div>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-gradient-to-r from-green-600/20 to-emerald-600/20 backdrop-blur-lg border-2 border-green-400/30">
-                <CardContent className="p-6 text-center">
-                  <BookOpen className="w-16 h-16 text-green-400 mx-auto mb-4" />
-                  <div className="text-4xl font-black text-white mb-2">156</div>
-                  <div className="text-white/80 font-semibold">Total Learning Hours</div>
-                  <div className="text-green-400 text-sm mt-2">Amazing progress! 💪</div>
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
-        </Tabs>
+        {/* Quest Details Panel */}
+        {selectedQuest && (
+          <Card className="mt-8 bg-black/50 backdrop-blur-lg border-4 border-hot-400/30 morphing-blob animate-scale-in">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="font-apple-ny text-2xl font-black text-hot-400 text-glow">
+                  {selectedQuest.title}
+                </h3>
+                <Badge className={`px-4 py-2 font-bold ${
+                  selectedQuest.status === 'completed' ? 'bg-neon-500 text-black' :
+                  selectedQuest.status === 'current' ? 'bg-yellow-500 text-black' :
+                  'bg-gray-600 text-white'
+                }`}>
+                  {selectedQuest.status.toUpperCase()}
+                </Badge>
+              </div>
+              
+              <p className="text-white/90 font-space mb-6">{selectedQuest.description}</p>
+              
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <span className="text-yellow-400 font-space font-bold">
+                    <Zap className="w-4 h-4 inline mr-1" />
+                    {selectedQuest.points} XP
+                  </span>
+                  <span className="text-electric-400 font-space font-bold">
+                    Level {selectedQuest.level}
+                  </span>
+                </div>
+                
+                {selectedQuest.status === 'current' && (
+                  <Button className="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-black font-bold px-8">
+                    <Play className="w-4 h-4 mr-2" />
+                    CONTINUE QUEST
+                  </Button>
+                )}
+                
+                {selectedQuest.status === 'completed' && (
+                  <Button className="bg-gradient-to-r from-neon-500 to-green-600 hover:from-neon-600 hover:to-green-700 text-black font-bold px-8">
+                    <Trophy className="w-4 h-4 mr-2" />
+                    REVIEW
+                  </Button>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        )}
       </div>
     </div>
   );
